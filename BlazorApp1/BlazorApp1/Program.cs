@@ -1,3 +1,4 @@
+using BlazorApp1.APIClient;
 using BlazorApp1.Components;
 using BlazorApp1.Services;
 using Serilog;
@@ -21,8 +22,10 @@ builder.Services.AddHttpClient("MyApi", client =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// 追加サービス
 builder.Services.AddScoped<UserApiService>();
 builder.Services.AddScoped<ApiCaller>();
+builder.Services.AddScoped<APIClient>();
 
 var app = builder.Build();
 

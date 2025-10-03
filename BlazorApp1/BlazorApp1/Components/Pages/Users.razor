@@ -1,5 +1,5 @@
 ﻿@page "/users"
-@inject BlazorApp1.Services.UserApiService UserService
+@inject BlazorApp1.APIClient.APIClient APIClient
 
 <h3>Users</h3>
 
@@ -33,7 +33,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await UserService.GetUserAsync();
+        var result = await APIClient.GetUsersAsync();
         users = result.Data;
         errorMessage = result.ErrorMessage;
     }

@@ -25,7 +25,8 @@ builder.Services.AddRazorComponents()
 // 追加サービス
 builder.Services.AddScoped<UserApiService>();
 builder.Services.AddScoped<ApiCaller>();
-builder.Services.AddScoped<APIClient>();
+builder.Services.AddScoped<IAPIClient, APIClient>();
+//builder.Services.AddScoped<APIClient>();
 
 var app = builder.Build();
 

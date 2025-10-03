@@ -1,7 +1,15 @@
 using BlazorApp1.Components;
 using BlazorApp1.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Serilog を構成（ログファイルに保存）
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/app-.log", rollingInterval: RollingInterval.Day) // 日ごとにファイル分割
+    .CreateLogger();
+builder.Host.UseSerilog();
 
 // webapi 用 HttpClient を登録
 builder.Services.AddHttpClient("MyApi", client =>

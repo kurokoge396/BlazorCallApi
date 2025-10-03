@@ -4,16 +4,16 @@ namespace BlazorApp1.Services
 {
     public class UserApiService
     {
-        private readonly HttpClient _httpClient;
+        private readonly ApiCaller _apiCaller;
 
-        public UserApiService(IHttpClientFactory factory)
+        public UserApiService(ApiCaller apiCaller)
         {
-            _httpClient = factory.CreateClient("MyApi");
+            _apiCaller = apiCaller;
         }
 
-        public async Task<List<User?>> GetUserAsync()
+        public async Task<(List<User?> Data, string? ErrorMessage)> GetUserAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<User>>("api/Users");
+            return await _apiCaller.GetAsync<List<User>>("MyApi", "api/Users");
         }
     }
 

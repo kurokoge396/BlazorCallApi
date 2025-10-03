@@ -14,6 +14,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped<UserApiService>();
+builder.Services.AddScoped<ApiCaller>();
 
 var app = builder.Build();
 

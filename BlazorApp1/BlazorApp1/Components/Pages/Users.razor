@@ -3,6 +3,11 @@
 
 <h3>Users</h3>
 
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
 @if (users == null)
 {
     <p><em>Loading...</em></p>
@@ -24,9 +29,12 @@ else
 
 @code {
     private List<BlazorApp1.Services.User?> users;
+    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        users = await UserService.GetUserAsync();
+        var result = await UserService.GetUserAsync();
+        users = result.Data;
+        errorMessage = result.ErrorMessage;
     }
 }

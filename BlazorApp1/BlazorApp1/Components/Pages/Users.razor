@@ -1,5 +1,6 @@
 ﻿@page "/users"
 @inject BlazorApp1.APIClient.IAPIClient IApiClient
+@using BlazorApp1.Shared.Models
 
 <h3>Users</h3>
 
@@ -18,9 +19,9 @@ else
         @foreach (var user in users)
         {
             <li>
-                <p>ID: @user.id</p>
-                <p>Name: @user.name</p>
-                <p>Email: @user.email</p>
+                <p>ID: @user.Id</p>
+                <p>Name: @user.Name</p>
+                <p>Email: @user.Email</p>
             </li>
         }
     </ul>
@@ -28,7 +29,7 @@ else
 
 
 @code {
-    private List<BlazorApp1.Services.User?> users;
+    private List<User?> users;
     private string? errorMessage;
 
     protected override async Task OnInitializedAsync()

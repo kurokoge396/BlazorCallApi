@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using BlazorApp1.Shared.Models;
 
 namespace BlazorApp1.Services
 {
@@ -15,20 +15,5 @@ namespace BlazorApp1.Services
         {
             return await _apiCaller.GetAsync<List<User>>("MyApi", "api/Users");
         }
-    }
-
-    public class User
-    {
-        [JsonPropertyName("id")]
-        public int id { get; set; }
-
-        [JsonPropertyName("name")]
-        public string name { get; set; } = null;
-
-        [JsonPropertyName("password")]
-        public string password { get; set; } = null;
-
-        [JsonPropertyName("email")]
-        public string email { get; set; } = null;
     }
 }

@@ -1,4 +1,8 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@rendermode InteractiveServer
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">BlazorApp1</a>
     </div>
@@ -25,6 +29,43 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
             </NavLink>
         </div>
+        <!-- ログイン済みのみ表示 -->
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="user-create">
+                        <span class="bi bi bi-person-add-nav-menu" aria-hidden="true"></span> ユーザー作成
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="logout">
+                        <span class="bi bi-box-arrow-left-nav-menu" aria-hidden="true"></span> ログアウト
+                    </NavLink>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="login">
+                        <span class="bi bi-box-arrow-in-right-nav-menu" aria-hidden="true"></span> Login
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+
     </nav>
 </div>
 
+
+@code {
+    [Inject] IHttpClientFactory HttpClientFactory { get; set; } = default!;
+    [Inject] AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
+    [Inject] NavigationManager Navigation { get; set; } = default!;
+
+    private async Task Logout()
+    {
+        var client = HttpClientFactory.CreateClient("MyApi");
+        await client.PostAsync("api/auth/logout", null); // ← WebAPI側でCookie削除処理を実装
+
+        Navigation.NavigateTo("/", true);
+    }
+}

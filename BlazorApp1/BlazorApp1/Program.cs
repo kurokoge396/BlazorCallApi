@@ -1,7 +1,9 @@
 using BlazorApp1.APIClient;
 using BlazorApp1.Components;
+using BlazorApp1.Providers;
 using BlazorApp1.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
@@ -21,9 +23,9 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "your-app",
-        ValidAudience = "your-app",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key"))
+        ValidIssuer = "https://localhost:7168",
+        ValidAudience = "https://localhost:7168",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("2112121212131435436546547687567867645643523423432564365754757565436643523454324324324343435454354364576346576346grfertv34vt4g54t43f435f4cdrhy53b6hs456s46y5y5465467565463456w46wrd32535g54j6547j477sj65jn64354jsj4e4fyt56j4k64s564h5uyk56sh46s4s64g34g5h4f45f36"))
     };
 
     // Cookieからトークンを読み取る設定
@@ -42,6 +44,12 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+// 認証状態プロバイダーを登録
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<CustomAuthenticationService>();
 
 // Serilog を構成（ログファイルに保存）
 Log.Logger = new LoggerConfiguration()

@@ -3,6 +3,8 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 @inject BlazorApp1.APIClient.IAPIClient IApiClient
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthProvider
 
 
 <h3>ログアウト</h3>
@@ -26,7 +28,7 @@
             if (response.IsSuccess)
             {
                 await Task.Delay(1000);
-                Navigation.NavigateTo("/login", true);
+                Navigation.NavigateTo("/", true);
             }
             else
             {

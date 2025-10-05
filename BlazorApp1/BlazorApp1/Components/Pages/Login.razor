@@ -2,6 +2,8 @@
 @inject NavigationManager Navigation
 @inject BlazorApp1.APIClient.IAPIClient IApiClient
 @rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
 
 <h3>Login</h3>
 
@@ -25,6 +27,10 @@
             // await localStorage.SetItemAsync("authToken", token);
 
             message = "ログイン成功！";
+            // Cookie にサーバー側でJWTがセットされている前提
+            ((CustomAuthenticationStateProvider)AuthStateProvider).AuthenticateUser(username);
+
+            // ((CustomAuthenticationStateProvider)AuthProvider).NotifyAuthenticationStateChangedManually();
             // Navigation.NavigateTo("/todo");
         }
         else

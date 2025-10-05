@@ -11,7 +11,7 @@
             _logger = logger;
         }
 
-        public async Task<string> PostAsync(string clientName, string url, HttpContent content)
+        public async Task<(bool result, string message)> PostAsync(string clientName, string url, HttpContent content)
         {
             try
             {
@@ -21,22 +21,22 @@
                 var client = _factory.CreateClient(clientName);
                 var response = await client.PostAsync(url, content);
                 response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsStringAsync();
+                return (response.IsSuccessStatusCode, await response.Content.ReadAsStringAsync());
             }
             catch (TaskCanceledException ex)
             {
                 _logger.LogError(ex, "Timeout when calling {Url}", url);
-                return "サーバーからの応答がタイムアウトしました。";
+                return (false, "サーバーからの応答がタイムアウトしました。");
             }
             catch (HttpRequestException ex)
             {
                 _logger.LogError(ex, "Network error when calling {Url}", url);
-                return $"通信エラーが発生しました: {ex.Message}";
+                return (false, $"通信エラーが発生しました: {ex.Message}");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error when calling {Url}", url);
-                return $"予期しないエラーが発生しました: {ex.Message}";
+                return (false, $"予期しないエラーが発生しました: {ex.Message}");
             }
         }
 

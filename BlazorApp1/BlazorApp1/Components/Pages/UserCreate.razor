@@ -44,14 +44,15 @@
     {
         try
         {
-            if (await IApiClient.CreateUser(user))
+            var response = await IApiClient.CreateUser(user);
+            if (response.IsSuccess)
             {
                 message = "ユーザー登録が完了しました。";
                 user = new(); // 入力欄をリセット
             }
             else
             {
-                message = "エラー：問い合わせ";
+                message = $"エラー{Environment.NewLine}{response.Message}";
             }
         }
         catch (Exception ex)

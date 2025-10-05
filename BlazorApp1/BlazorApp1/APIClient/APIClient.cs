@@ -9,9 +9,11 @@ namespace BlazorApp1.APIClient
     /// </summary>
     public interface IAPIClient
     {
-        public Task<bool> Login(string userName, string password);
+        public Task<PostResult> Login(string userName, string password);
+        public Task<PostResult> Logout();
+
         public Task<(List<User?> Data, string? ErrorMessage)> GetUsersAsync();
-        public Task<bool> CreateUser(User user);
+        public Task<PostResult> CreateUser(User user);
     }
 
     /// <summary>
@@ -33,7 +35,7 @@ namespace BlazorApp1.APIClient
         /// <param name="userName">ユーザ一名</param>
         /// <param name="password">パスワード</param>
         /// <returns>正否</returns>
-        public async Task<bool> Login(string userName, string password)
+        public async Task<PostResult> Login(string userName, string password)
         {
             var headers = new Dictionary<string, string>
             {
@@ -49,9 +51,21 @@ namespace BlazorApp1.APIClient
 
             //var httpContent = new FormUrlEncodedContent(headers);
             var response = await _apiCaller.PostAsync("MyApi", "api/login", content);
-            using var doc = System.Text.Json.JsonDocument.Parse(response);
+            //using var doc = System.Text.Json.JsonDocument.Parse(response.message);
 
-            return doc.RootElement.GetProperty("message").GetString() != string.Empty;
+            return new PostResult() { IsSuccess = response.result, Message = response.message };
+        }
+
+        /// <summary>
+        /// ログアウト
+        /// </summary>
+        /// <returns>正否</returns>
+        public async Task<PostResult> Logout()
+        {
+            var response = await _apiCaller.PostAsync("MyApi", "api/logout", null);
+            //using var doc = System.Text.Json.JsonDocument.Parse(response);
+
+            return new PostResult() { IsSuccess = response.result, Message = response.message };
         }
 
         /// <summary>
@@ -68,7 +82,7 @@ namespace BlazorApp1.APIClient
         /// </summary>
         /// <param name="user">作成予定のユーザー</param>
         /// <returns>正否</returns>
-        public async Task<bool> CreateUser(User user)
+        public async Task<PostResult> CreateUser(User user)
         {
             // 送信するデータ
             // Dictionary型でデータ作成
@@ -85,9 +99,9 @@ namespace BlazorApp1.APIClient
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _apiCaller.PostAsync("MyApi", "api/Users/Create", content);
-            using var doc = System.Text.Json.JsonDocument.Parse(response);
-
-            return doc.RootElement.GetProperty("message").GetString() != string.Empty;
+            return new PostResult() { IsSuccess = response.result, Message = response.message };
+            //using var doc = System.Text.Json.JsonDocument.Parse(response);
+            //return doc.RootElement.GetProperty("message").GetString() != string.Empty;
         }
     }
 }

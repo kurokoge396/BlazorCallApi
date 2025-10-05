@@ -1,0 +1,41 @@
+﻿@page "/logout"
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject BlazorApp1.APIClient.IAPIClient IApiClient
+
+
+<h3>ログアウト</h3>
+
+<button class="btn btn-danger" @onclick="OnLogout">ログアウト</button>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-info mt-3">@message</div>
+}
+
+@code {
+    private string message = string.Empty;
+
+    private async Task OnLogout()
+    {
+        try
+        {
+            var response = await IApiClient.Logout();
+
+            if (response.IsSuccess)
+            {
+                await Task.Delay(1000);
+                Navigation.NavigateTo("/login", true);
+            }
+            else
+            {
+                message = "ログアウトに失敗しました。";
+            }
+        }
+        catch (Exception ex)
+        {
+            message = $"エラー: {ex.Message}";
+        }
+    }
+}
